@@ -4,12 +4,30 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { createStore, compose, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import reducers from './state/reducers';
+import { Provider } from 'react-redux';
+
+import axios from 'axios';
+
+const composeEnhancers =
+  (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const store = createStore(reducers, {}, composeEnhancers(applyMiddleware(thunk)));
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.withCredentials = true;
+
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
 );
 
